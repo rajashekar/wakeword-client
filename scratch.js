@@ -492,6 +492,19 @@ function plotImage(stft, samplesPerSlice, layout) {
   }
 
 
-
 plotAudio(resampledMonoAudio, createLayout('Time domain', 'Time (samples)', 'Amplitude'));
 plotSpectrogram(log_mels, SPEC_HOP_LENGTH, createLayout('Mel Spectrogram', 'frame', 'mel freq'));
+
+// compute log_mels
+let log_mels_offset = [];
+let log_offset = 1e-6
+for (let i = 0; i < log_mels.length; i++) {
+    for (let j = 0; j < log_mels[0].length; j++) {
+    if (log_mels_offset[i] == undefined) {
+        log_mels_offset[i] = [];
+    }
+    log_mels_offset[i][j] = Math.log(log_mels[i][j] + log_offset)
+    }
+}
+
+plotSpectrogram(log_mels_offset, SPEC_HOP_LENGTH, createLayout('Mel Spectrogram', 'frame', 'mel freq'));
